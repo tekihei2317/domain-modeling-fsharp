@@ -24,4 +24,27 @@ let contact2: Contact =
 // printfn "%b" (contact1 = contact2)
 
 // IDを直接比較する
-printfn "%b" (contact1.ContactId = contact2.ContactId)
+printfn "contact: %b" (contact1.ContactId = contact2.ContactId)
+
+type OrderId = OrderId of string
+type ProductId = ProductId of string
+
+// 複数のプロパティで比較する場合は、新しくプロパティを定義すると楽
+[<NoEquality; NoComparison>]
+type OrderLine =
+    { OrderId: OrderId
+      ProductId: ProductId
+      Qty: int }
+    member this.Key = (this.OrderId, this.ProductId)
+
+let line1: OrderLine =
+    { OrderId = OrderId "1"
+      ProductId = ProductId "1"
+      Qty = 10 }
+
+let line2: OrderLine =
+    { OrderId = OrderId "1"
+      ProductId = ProductId "1"
+      Qty = 20 }
+
+printfn "order line: %b" (line1.Key = line2.Key)
